@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Service
 public class BankAccountServiceImpl implements BankAccountService {
@@ -21,6 +22,13 @@ public class BankAccountServiceImpl implements BankAccountService {
     private BankAccountRepository bankAccountRepository;
     @Override
     public BankResponseDto createBankAccount(CreateBankAccountRequestDto requestDto) {
+
+        Optional<User> user = userRepository.findByEmail(requestDto.getEmail());
+        if (user.isPresent()){
+            return BankResponseDto.builder()
+                    .statusCode(BankAccountUtils.EMAIL_ALREADY_EXISTS_CODE)
+                    .message(BankAccountUtils.EMAIL_ALREADY_EXISTS_MSG).build();
+        }
 
         User newUser = new User();
         newUser.setFirstname(requestDto.getFirstname());
