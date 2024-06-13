@@ -14,6 +14,8 @@ public class BankAccountUtils {
 
     public static final String UNABLE_TO_UPLOAD_FILE_CODE = "E-101";
 
+    public static final String FILE_FIELD_EMPTY_CODE = "E-102";
+    public static final String FILE_FIELD_EMPTY_MSG = "Please upload a file";
 
     public static final String EMAIL_ALREADY_EXISTS_CODE = "E-001";
     public static final String EMAIL_ALREADY_EXISTS_MSG = "Email already exists , if you" +

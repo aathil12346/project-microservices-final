@@ -36,6 +36,14 @@ public class BankAccountServiceImpl implements BankAccountService {
                     .message(BankAccountUtils.EMAIL_ALREADY_EXISTS_MSG).build();
         }
 
+        try {
+            fileUploadService.uploadFile(file,requestDto.getEmail());
+        }catch (IOException exception){
+            return BankResponseDto.builder()
+                    .message(exception.getMessage())
+                    .statusCode(BankAccountUtils.UNABLE_TO_UPLOAD_FILE_CODE).build();
+        }
+
         User newUser = new User();
         newUser.setFirstname(requestDto.getFirstname());
         newUser.setLastname(requestDto.getLastname());
@@ -68,13 +76,6 @@ public class BankAccountServiceImpl implements BankAccountService {
         userRepository.save(newUser);
         bankAccountRepository.save(bankAccount);
 
-        try {
-            fileUploadService.uploadFile(file,requestDto.getEmail());
-        }catch (IOException exception){
-            return BankResponseDto.builder()
-                    .message(exception.getMessage())
-                    .statusCode(BankAccountUtils.UNABLE_TO_UPLOAD_FILE_CODE).build();
-        }
 
         return BankResponseDto.builder()
                 .statusCode(BankAccountUtils.ACCOUNT_CREATION_REQUEST_RAISED_CODE)

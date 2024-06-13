@@ -4,9 +4,12 @@ import com.bankingapp.account_services.dto.BankResponseDto;
 import com.bankingapp.account_services.dto.CreateBankAccountRequestDto;
 import com.bankingapp.account_services.service.BankAccountService;
 import com.bankingapp.account_services.service.S3FileUploadService;
+import com.bankingapp.account_services.utils.BankAccountUtils;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,10 +24,21 @@ public class BankAccountController {
 
 
     @PostMapping(value = "/create-account",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public BankResponseDto createBankAccount(@Valid @RequestPart(value = "requestDto") CreateBankAccountRequestDto requestDto,
+    public ResponseEntity<BankResponseDto> createBankAccount(@Valid @RequestPart(value = "requestDto") CreateBankAccountRequestDto requestDto,
                                              @RequestPart(value = "file") MultipartFile governmentId) throws IOException {
 
-        return bankAccountService.createBankAccount(requestDto,governmentId);
+        if (governmentId == null || governmentId.isEmpty()) {
+            return new ResponseEntity<>(BankResponseDto.builder()
+                    .statusCode(BankAccountUtils.FILE_FIELD_EMPTY_CODE)
+                    .message(BankAccountUtils.FILE_FIELD_EMPTY_MSG).build(),HttpStatus.BAD_REQUEST);
+        }
+
+        BankResponseDto bankResponseDto = bankAccountService.createBankAccount(requestDto,governmentId);
+        if (!bankResponseDto.getStatusCode().equals("S-001")){
+
+            return new ResponseEntity<>(bankResponseDto,HttpStatus.EXPECTATION_FAILED);
+        }
+        return new ResponseEntity<>(bankResponseDto,HttpStatus.OK);
     }
 
 
