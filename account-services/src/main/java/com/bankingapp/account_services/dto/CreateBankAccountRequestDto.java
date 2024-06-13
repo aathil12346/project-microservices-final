@@ -35,7 +35,7 @@ public class CreateBankAccountRequestDto {
 
     @NotBlank(message = "Postcode cannot be blank")
     @NotEmpty(message = "Postcode cannot be empty")
-    @Size(max = 6)
+    @Size(max = 5)
     private String postcode;
     private String streetName;
 
