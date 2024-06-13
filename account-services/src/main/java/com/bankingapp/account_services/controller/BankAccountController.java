@@ -7,10 +7,10 @@ import com.bankingapp.account_services.service.S3FileUploadService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("v1/account-services")
@@ -22,10 +22,12 @@ public class BankAccountController {
     private S3FileUploadService fileUploadService;
 
     @PostMapping(value = "/create-account",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public BankResponseDto createBankAccount(@Valid @RequestBody CreateBankAccountRequestDto requestDto){
+    public BankResponseDto createBankAccount(@Valid @RequestPart(value = "requestDto") CreateBankAccountRequestDto requestDto,
+                                             @RequestPart(value = "file") MultipartFile governmentId) throws IOException {
 
+        fileUploadService.uploadFile(governmentId,requestDto.getEmail());
         return bankAccountService.createBankAccount(requestDto);
-
     }
+
 
 }

@@ -25,9 +25,9 @@ public class S3FileUploadServiceImpl implements S3FileUploadService {
 
 
     @Override
-    public String uploadFile(MultipartFile file) throws IOException {
+    public String uploadFile(MultipartFile file,String email) throws IOException {
         File fileObj = convertMultiPartFileToFile(file);
-        String filename = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        String filename = System.currentTimeMillis() + "_" + email;
         s3Client.putObject(new PutObjectRequest(bucketName,filename,fileObj));
         fileObj.delete();
         return "file uploaded to s3 successfully";
