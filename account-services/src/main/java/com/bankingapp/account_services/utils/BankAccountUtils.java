@@ -8,9 +8,10 @@ import java.util.Random;
 public class BankAccountUtils {
 
     public static final String ACCOUNT_CREATION_REQUEST_RAISED_CODE = "S-001";
-    public static final String ACCOUNT_CREATION_REQUEST_RAISED_MSG = "Bank account creation request raised successfully" + "\n"
-            +"Please Verify your email using the link sent to your mail" + "\n" +
-            "Upload a government Id to complete all verification process";
+    public static final String ACCOUNT_CREATION_REQUEST_RAISED_MSG = "Bank account creation request raised successfully"
+            +"Please Verify your email using the link sent to your mail" +
+            "Please note that account will be created only after a successfull Id verification" +
+            "We will email you soon with confirmation";
 
     public static final String UNABLE_TO_UPLOAD_FILE_CODE = "E-101";
 
