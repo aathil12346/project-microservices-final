@@ -71,7 +71,9 @@ public class BankAccountServiceImpl implements BankAccountService {
         try {
             fileUploadService.uploadFile(file,requestDto.getEmail());
         }catch (IOException exception){
-            throw new RuntimeException(exception.getMessage());
+            return BankResponseDto.builder()
+                    .message(exception.getMessage())
+                    .statusCode(BankAccountUtils.UNABLE_TO_UPLOAD_FILE_CODE).build();
         }
 
         return BankResponseDto.builder()

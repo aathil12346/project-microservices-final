@@ -12,6 +12,8 @@ public class BankAccountUtils {
             +"Please Verify your email using the link sent to your mail" + "\n" +
             "Upload a government Id to complete all verification process";
 
+    public static final String UNABLE_TO_UPLOAD_FILE_CODE = "E-101";
+
     public static final String EMAIL_ALREADY_EXISTS_CODE = "E-001";
     public static final String EMAIL_ALREADY_EXISTS_MSG = "Email already exists , if you" +
             "are an existing user please log in to create additional bank accounts";
