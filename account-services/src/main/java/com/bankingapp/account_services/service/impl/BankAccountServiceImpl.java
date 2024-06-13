@@ -65,9 +65,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         return BankResponseDto.builder()
                 .statusCode(BankAccountUtils.ACCOUNT_CREATION_REQUEST_RAISED_CODE)
                 .message(BankAccountUtils.ACCOUNT_CREATION_REQUEST_RAISED_MSG)
-                .accountBalance(bankAccount.getAccountBalance())
-                .accountNumber(bankAccount.getAccountNumber())
-                .accountStatus(bankAccount.getAccountStatus()).build();
+                .build();
 
 
     }

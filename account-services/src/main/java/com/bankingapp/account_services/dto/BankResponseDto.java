@@ -15,7 +15,5 @@ public class BankResponseDto {
 
     private String statusCode;
     private String message;
-    private String accountNumber;
-    private String accountStatus;
-    private BigDecimal accountBalance;
+
 }
