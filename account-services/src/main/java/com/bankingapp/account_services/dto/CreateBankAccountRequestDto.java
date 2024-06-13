@@ -1,10 +1,7 @@
 package com.bankingapp.account_services.dto;
 
 import com.bankingapp.account_services.entity.AccountType;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,12 +26,9 @@ public class CreateBankAccountRequestDto {
     @Email(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
     private String email;
 
-    //    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{8,})$"
-//            ,message = "Password should contain atleast one uppercase" + "\n" + "" +
-//            "Password should contain atleast one lowercase" + "\n" +
-//            "Password should contain atleast one digit" + "\n" + "" +
-//            "Password should contain atleast one special character")
-    @Size(min = 8 , max = 16 ,message = "Password length should be in the 8 to 16 range" )
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,20}$"
+    ,message = "Password should have atleast one: small letter" + "\n" + "one capital letter" +
+    "\n" + "one digit" + "\n" + "one special character" + "\n" + "range = 8 to 20")
     @NotBlank(message = "Please set a password")
     private String password;
 
