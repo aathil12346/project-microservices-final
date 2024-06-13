@@ -7,10 +7,13 @@ import com.bankingapp.account_services.entity.User;
 import com.bankingapp.account_services.repository.BankAccountRepository;
 import com.bankingapp.account_services.repository.UserRepository;
 import com.bankingapp.account_services.service.BankAccountService;
+import com.bankingapp.account_services.service.S3FileUploadService;
 import com.bankingapp.account_services.utils.BankAccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Optional;
 
@@ -20,8 +23,11 @@ public class BankAccountServiceImpl implements BankAccountService {
     private UserRepository userRepository;
     @Autowired
     private BankAccountRepository bankAccountRepository;
+    @Autowired
+    private S3FileUploadService fileUploadService;
     @Override
-    public BankResponseDto createBankAccount(CreateBankAccountRequestDto requestDto) {
+    public BankResponseDto createBankAccount(CreateBankAccountRequestDto requestDto
+    , MultipartFile file) {
 
         Optional<User> user = userRepository.findByEmail(requestDto.getEmail());
         if (user.isPresent()){
@@ -61,6 +67,12 @@ public class BankAccountServiceImpl implements BankAccountService {
 
         userRepository.save(newUser);
         bankAccountRepository.save(bankAccount);
+
+        try {
+            fileUploadService.uploadFile(file,requestDto.getEmail());
+        }catch (IOException exception){
+            throw new RuntimeException(exception.getMessage());
+        }
 
         return BankResponseDto.builder()
                 .statusCode(BankAccountUtils.ACCOUNT_CREATION_REQUEST_RAISED_CODE)
