@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 public class VerificationToken {
 
-    @jakarta.persistence.Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
     private String token;
