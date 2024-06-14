@@ -2,10 +2,14 @@ package com.bankingapp.account_services.service.impl;
 
 import com.bankingapp.account_services.dto.BankResponseDto;
 import com.bankingapp.account_services.dto.CreateBankAccountRequestDto;
+import com.bankingapp.account_services.dto.EmailRequestDto;
 import com.bankingapp.account_services.entity.BankAccount;
 import com.bankingapp.account_services.entity.User;
+import com.bankingapp.account_services.entity.VerificationToken;
 import com.bankingapp.account_services.repository.BankAccountRepository;
 import com.bankingapp.account_services.repository.UserRepository;
+import com.bankingapp.account_services.repository.VerificationTokenRepository;
+import com.bankingapp.account_services.service.ApiClient;
 import com.bankingapp.account_services.service.BankAccountService;
 import com.bankingapp.account_services.service.S3FileUploadService;
 import com.bankingapp.account_services.utils.BankAccountUtils;
@@ -15,7 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class BankAccountServiceImpl implements BankAccountService {
@@ -25,6 +31,10 @@ public class BankAccountServiceImpl implements BankAccountService {
     private BankAccountRepository bankAccountRepository;
     @Autowired
     private S3FileUploadService fileUploadService;
+    @Autowired
+    private VerificationTokenRepository tokenRepository;
+    @Autowired
+    private ApiClient apiClient;
     @Override
     public BankResponseDto createBankAccount(CreateBankAccountRequestDto requestDto
     , MultipartFile file) {
@@ -76,12 +86,34 @@ public class BankAccountServiceImpl implements BankAccountService {
         userRepository.save(newUser);
         bankAccountRepository.save(bankAccount);
 
+        sendVerificationToken(newUser);
+
 
         return BankResponseDto.builder()
                 .statusCode(BankAccountUtils.ACCOUNT_CREATION_REQUEST_RAISED_CODE)
                 .message(BankAccountUtils.ACCOUNT_CREATION_REQUEST_RAISED_MSG)
                 .build();
 
+
+    }
+
+    private void sendVerificationToken(User user){
+
+        String token = UUID.randomUUID().toString();
+        VerificationToken token1 = VerificationToken.builder()
+                .token(token)
+                .user(user)
+                .expiryDate(LocalDateTime.now().plusHours(24L)).build();
+
+        tokenRepository.save(token1);
+        String verificationUrl = "http://localhost:8080/verify?token=" + token;
+        String message = "Please click the following link to verify your email address:\n" + verificationUrl;
+        EmailRequestDto requestDto = EmailRequestDto.builder()
+                .recipient(user.getEmail())
+                .message(message)
+                .subject("Email Verification").build();
+
+        apiClient.sendEmail(requestDto);
 
     }
 }
