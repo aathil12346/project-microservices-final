@@ -14,6 +14,7 @@ import com.bankingapp.account_services.service.BankAccountService;
 import com.bankingapp.account_services.service.S3FileUploadService;
 import com.bankingapp.account_services.utils.BankAccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -106,7 +107,7 @@ public class BankAccountServiceImpl implements BankAccountService {
                 .expiryDate(LocalDateTime.now().plusHours(24L)).build();
 
         tokenRepository.save(token1);
-        String verificationUrl = "http://localhost:8080/verify?token=" + token;
+        String verificationUrl = "http://localhost:8081/v1/account-services/verify?token=" + token;
         String message = "Please click the following link to verify your email address:\n" + verificationUrl;
         EmailRequestDto requestDto = EmailRequestDto.builder()
                 .recipient(user.getEmail())
@@ -115,5 +116,25 @@ public class BankAccountServiceImpl implements BankAccountService {
 
         apiClient.sendEmail(requestDto);
 
+    }
+
+    @Override
+    public String verifyToken(String token) {
+
+        VerificationToken verificationToken = tokenRepository.findByToken(token);
+
+        if (verificationToken == null) {
+            return "Invalid Token";
+        }
+
+        if (verificationToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+            return "Token Expired, Generate a new token";
+        }
+
+        User user = verificationToken.getUser();
+        user.setEmailVerified(true);
+        userRepository.save(user);
+
+        return "Your Email is now Verified";
     }
 }

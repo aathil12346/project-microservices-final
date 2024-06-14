@@ -8,4 +8,6 @@ public interface BankAccountService {
 
     BankResponseDto createBankAccount(CreateBankAccountRequestDto requestDto
             , MultipartFile file);
+
+    String verifyToken(String token);
 }
