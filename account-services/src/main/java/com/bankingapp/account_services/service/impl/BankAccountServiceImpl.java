@@ -131,7 +131,11 @@ public class BankAccountServiceImpl implements BankAccountService {
             return "Token Expired, Generate a new token";
         }
 
+
         User user = verificationToken.getUser();
+        if (user.isEmailVerified()){
+            return "User Email already verified";
+        }
         user.setEmailVerified(true);
         userRepository.save(user);
 

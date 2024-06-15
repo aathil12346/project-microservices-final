@@ -26,7 +26,6 @@ public class User {
     private String postCode;
     private String streetName;
     private String role;
-    private String verificationToken;
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<BankAccount> bankAccounts = new ArrayList<>();
 }
