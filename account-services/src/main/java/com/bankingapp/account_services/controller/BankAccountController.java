@@ -49,7 +49,14 @@ public class BankAccountController {
     public ResponseEntity<String> verifyToken(@RequestParam(value = "token")
                                                   String token){
 
-          return new ResponseEntity<>(bankAccountService.verifyToken(token),HttpStatus.OK);
+          String result = bankAccountService.verifyToken(token);
+
+          if (result.equals("Your Email is now Verified")){
+
+              return new ResponseEntity<>(result,HttpStatus.OK);
+          }
+
+          return new ResponseEntity<>(result,HttpStatus.EXPECTATION_FAILED);
     }
 
 
