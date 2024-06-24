@@ -2,6 +2,7 @@ package com.bankingapp.account_services.controller;
 
 import com.bankingapp.account_services.dto.BankResponseDto;
 import com.bankingapp.account_services.dto.CreateBankAccountRequestDto;
+import com.bankingapp.account_services.dto.LoginInformationDto;
 import com.bankingapp.account_services.entity.VerificationToken;
 import com.bankingapp.account_services.repository.VerificationTokenRepository;
 import com.bankingapp.account_services.service.BankAccountService;
@@ -57,6 +58,12 @@ public class BankAccountController {
           }
 
           return new ResponseEntity<>(result,HttpStatus.EXPECTATION_FAILED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@Valid @RequestBody LoginInformationDto dto){
+
+        return ResponseEntity.ok(bankAccountService.login(dto));
     }
 
 

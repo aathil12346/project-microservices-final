@@ -4,6 +4,7 @@ import com.bankingapp.account_services.config.SecurityConfig;
 import com.bankingapp.account_services.dto.BankResponseDto;
 import com.bankingapp.account_services.dto.CreateBankAccountRequestDto;
 import com.bankingapp.account_services.dto.EmailRequestDto;
+import com.bankingapp.account_services.dto.LoginInformationDto;
 import com.bankingapp.account_services.entity.BankAccount;
 import com.bankingapp.account_services.entity.User;
 import com.bankingapp.account_services.entity.VerificationToken;
@@ -16,6 +17,10 @@ import com.bankingapp.account_services.service.S3FileUploadService;
 import com.bankingapp.account_services.utils.BankAccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,6 +43,8 @@ public class BankAccountServiceImpl implements BankAccountService {
     private VerificationTokenRepository tokenRepository;
     @Autowired
     private ApiClient apiClient;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @Override
     public BankResponseDto createBankAccount(CreateBankAccountRequestDto requestDto
@@ -143,5 +150,16 @@ public class BankAccountServiceImpl implements BankAccountService {
         userRepository.save(user);
 
         return "Your Email is now Verified";
+    }
+
+    @Override
+    public String login(LoginInformationDto loginInformationDto) {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                loginInformationDto.getEmail(),loginInformationDto.getPassword()
+        ));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        return "Logged-in Successfully";
     }
 }
