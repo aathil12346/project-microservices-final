@@ -65,7 +65,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         newUser.setPassword(SecurityConfig.passwordEncoder().encode(requestDto.getPassword()));
         newUser.setPostCode(requestDto.getPostcode());
         newUser.setStreetName(requestDto.getStreetName());
-        newUser.setRole("USER");
+        newUser.setRole("ROLE_USER");
         newUser.setEmailVerified(false);
 
         BankAccount bankAccount = BankAccount.builder().
