@@ -1,5 +1,6 @@
 package com.bankingapp.account_services.service.impl;
 
+import com.bankingapp.account_services.config.SecurityConfig;
 import com.bankingapp.account_services.dto.BankResponseDto;
 import com.bankingapp.account_services.dto.CreateBankAccountRequestDto;
 import com.bankingapp.account_services.dto.EmailRequestDto;
@@ -15,6 +16,7 @@ import com.bankingapp.account_services.service.S3FileUploadService;
 import com.bankingapp.account_services.utils.BankAccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,6 +38,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     private VerificationTokenRepository tokenRepository;
     @Autowired
     private ApiClient apiClient;
+
     @Override
     public BankResponseDto createBankAccount(CreateBankAccountRequestDto requestDto
     , MultipartFile file) {
@@ -59,7 +62,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         newUser.setFirstname(requestDto.getFirstname());
         newUser.setLastname(requestDto.getLastname());
         newUser.setEmail(requestDto.getEmail());
-        newUser.setPassword(requestDto.getPassword());
+        newUser.setPassword(SecurityConfig.passwordEncoder().encode(requestDto.getPassword()));
         newUser.setPostCode(requestDto.getPostcode());
         newUser.setStreetName(requestDto.getStreetName());
         newUser.setRole("USER");
