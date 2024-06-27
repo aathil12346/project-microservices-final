@@ -35,7 +35,8 @@ public class BankAccountController {
         if (governmentId == null || governmentId.isEmpty()) {
             return new ResponseEntity<>(BankResponseDto.builder()
                     .statusCode(BankAccountUtils.FILE_FIELD_EMPTY_CODE)
-                    .message(BankAccountUtils.FILE_FIELD_EMPTY_MSG).build(),HttpStatus.BAD_REQUEST);
+                    .message(BankAccountUtils.FILE_FIELD_EMPTY_MSG).build(),
+                    HttpStatus.BAD_REQUEST);
         }
 
         BankResponseDto bankResponseDto = bankAccountService.createBankAccount(requestDto,governmentId);
@@ -53,7 +54,6 @@ public class BankAccountController {
           String result = bankAccountService.verifyToken(token);
 
           if (result.equals("Your Email is now Verified")){
-
               return new ResponseEntity<>(result,HttpStatus.OK);
           }
 
