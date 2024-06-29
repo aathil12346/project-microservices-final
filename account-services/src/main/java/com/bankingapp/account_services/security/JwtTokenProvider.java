@@ -1,5 +1,6 @@
 package com.bankingapp.account_services.security;
 
+import com.bankingapp.account_services.exception.AppException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -42,13 +43,13 @@ public class JwtTokenProvider {
 
             return true;
         }catch (MalformedJwtException exception){
-            throw new MalformedJwtException("invalid jwt token");
+            throw new AppException("invalid jwt token",HttpStatus.BAD_REQUEST);
         }catch (ExpiredJwtException exception){
-            throw new ExpiredJwtException("Jwt expired");
+            throw new AppException("Jwt expired",HttpStatus.BAD_REQUEST);
         }catch (UnsupportedJwtException exception){
-            throw new UnsupportedJwtException("unsupported jwt token");
+            throw new AppException("unsupported jwt token",HttpStatus.BAD_REQUEST);
         }catch (IllegalArgumentException exception){
-            throw new IllegalArgumentException("jwt claims string is empty");
+            throw new AppException("jwt claims string is empty",HttpStatus.BAD_REQUEST);
         }
 
 
