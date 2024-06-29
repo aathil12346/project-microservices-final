@@ -60,7 +60,7 @@ public class JwtUtils {
         }catch (UnsupportedJwtException exception){
             throw new AppException("unsupported jwt token",HttpStatus.BAD_REQUEST);
         }catch (IllegalArgumentException exception){
-            throw new AppException("jwt claims string is empty",HttpStatus.BAD_REQUEST);
+            throw new AppException("jwt is empty",HttpStatus.BAD_REQUEST);
         }
 
 

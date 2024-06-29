@@ -11,6 +11,7 @@ import com.bankingapp.account_services.entity.VerificationToken;
 import com.bankingapp.account_services.repository.BankAccountRepository;
 import com.bankingapp.account_services.repository.UserRepository;
 import com.bankingapp.account_services.repository.VerificationTokenRepository;
+import com.bankingapp.account_services.security.JwtUtils;
 import com.bankingapp.account_services.service.ApiClient;
 import com.bankingapp.account_services.service.BankAccountService;
 import com.bankingapp.account_services.service.S3FileUploadService;
@@ -45,6 +46,8 @@ public class BankAccountServiceImpl implements BankAccountService {
     private ApiClient apiClient;
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private JwtUtils jwtUtils;
 
     @Override
     public BankResponseDto createBankAccount(CreateBankAccountRequestDto requestDto
@@ -160,6 +163,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return "Logged-in Successfully";
+        return jwtUtils.generateJwt(authentication);
+
     }
 }
