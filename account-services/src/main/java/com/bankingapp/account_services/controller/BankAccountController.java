@@ -3,6 +3,7 @@ package com.bankingapp.account_services.controller;
 import com.bankingapp.account_services.dto.BankResponseDto;
 import com.bankingapp.account_services.dto.CreateBankAccountRequestDto;
 import com.bankingapp.account_services.dto.LoginInformationDto;
+import com.bankingapp.account_services.dto.UserInfoDto;
 import com.bankingapp.account_services.entity.User;
 import com.bankingapp.account_services.entity.VerificationToken;
 import com.bankingapp.account_services.repository.VerificationTokenRepository;
@@ -66,6 +67,13 @@ public class BankAccountController {
     public ResponseEntity<String> login(@Valid @RequestBody LoginInformationDto dto){
 
         return ResponseEntity.ok(bankAccountService.login(dto));
+    }
+
+
+    @GetMapping("/get-user-details")
+    public ResponseEntity<UserInfoDto> getUserDetails(HttpServletRequest request){
+
+        return new ResponseEntity<>(bankAccountService.getUserDetails(request),HttpStatus.OK);
     }
 
 

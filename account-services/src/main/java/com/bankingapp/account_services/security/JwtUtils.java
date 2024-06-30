@@ -47,23 +47,11 @@ public class JwtUtils {
 
     public boolean validateToken(String token){
 
-        try {
             Jwts.parserBuilder().setSigningKey(generateKey())
                     .build()
                     .parse(token);
 
             return true;
-        }catch (MalformedJwtException exception){
-            throw new AppException("invalid jwt token",HttpStatus.BAD_REQUEST);
-        }catch (ExpiredJwtException exception){
-            throw new AppException("Jwt expired",HttpStatus.BAD_REQUEST);
-        }catch (UnsupportedJwtException exception){
-            throw new AppException("unsupported jwt token",HttpStatus.BAD_REQUEST);
-        }catch (IllegalArgumentException exception){
-            throw new AppException("jwt is empty",HttpStatus.BAD_REQUEST);
-        }
-
-
     }
 
     public String extractJwtFromRequest(HttpServletRequest request){

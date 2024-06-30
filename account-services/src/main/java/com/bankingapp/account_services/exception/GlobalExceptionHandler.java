@@ -1,10 +1,12 @@
 package com.bankingapp.account_services.exception;
 
 import com.bankingapp.account_services.dto.BankResponseDto;
+import com.bankingapp.account_services.utils.BankAccountUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -37,13 +39,24 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     }
     @ExceptionHandler(AppException.class)
-    public ResponseEntity<BankResponseDto> handleAppException(AppException exception,WebRequest request){
+    public ResponseEntity<BankResponseDto> handleAppException(AppException exception){
 
         BankResponseDto responseDto = BankResponseDto.builder()
                 .message(exception.getMessage())
-                .statusCode("E-200").build();
+                .statusCode(BankAccountUtils.JWT_EXCEPTION).build();
 
         return new ResponseEntity<>(responseDto,HttpStatus.BAD_REQUEST);
+
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<BankResponseDto> handleUsernameNotFoundException(UsernameNotFoundException exception,WebRequest request){
+
+        BankResponseDto responseDto = BankResponseDto.builder()
+                .message(exception.getMessage())
+                .statusCode(BankAccountUtils.USERNAME_NOT_FOUND_CODE).build();
+
+        return new ResponseEntity<>(responseDto,HttpStatus.NOT_FOUND);
 
     }
 }

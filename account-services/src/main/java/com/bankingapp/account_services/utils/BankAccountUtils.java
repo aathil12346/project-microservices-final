@@ -22,6 +22,9 @@ public class BankAccountUtils {
     public static final String EMAIL_ALREADY_EXISTS_MSG = "Email already exists , if you" +
             "are an existing user please log in to create additional bank accounts";
 
+    public static final String JWT_EXCEPTION = "E-200";
+    public static final String USERNAME_NOT_FOUND_CODE = "E-300";
+
     public static String generateBankAccountNumber() {
         Random random = new Random();
         int randomNumber = random.nextInt(900000) + 100000;

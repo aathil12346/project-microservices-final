@@ -3,6 +3,7 @@ package com.bankingapp.account_services.service;
 import com.bankingapp.account_services.dto.BankResponseDto;
 import com.bankingapp.account_services.dto.CreateBankAccountRequestDto;
 import com.bankingapp.account_services.dto.LoginInformationDto;
+import com.bankingapp.account_services.dto.UserInfoDto;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,5 +16,5 @@ public interface BankAccountService {
 
     String login(LoginInformationDto loginInformationDto);
 
-
+    UserInfoDto getUserDetails(HttpServletRequest request);
 }
