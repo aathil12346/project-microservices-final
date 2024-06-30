@@ -16,6 +16,7 @@ import com.bankingapp.account_services.service.ApiClient;
 import com.bankingapp.account_services.service.BankAccountService;
 import com.bankingapp.account_services.service.S3FileUploadService;
 import com.bankingapp.account_services.utils.BankAccountUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -166,4 +167,5 @@ public class BankAccountServiceImpl implements BankAccountService {
         return jwtUtils.generateJwt(authentication);
 
     }
+
 }

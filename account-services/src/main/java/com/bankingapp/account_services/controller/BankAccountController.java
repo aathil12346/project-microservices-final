@@ -3,11 +3,13 @@ package com.bankingapp.account_services.controller;
 import com.bankingapp.account_services.dto.BankResponseDto;
 import com.bankingapp.account_services.dto.CreateBankAccountRequestDto;
 import com.bankingapp.account_services.dto.LoginInformationDto;
+import com.bankingapp.account_services.entity.User;
 import com.bankingapp.account_services.entity.VerificationToken;
 import com.bankingapp.account_services.repository.VerificationTokenRepository;
 import com.bankingapp.account_services.service.BankAccountService;
 import com.bankingapp.account_services.service.S3FileUploadService;
 import com.bankingapp.account_services.utils.BankAccountUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -65,6 +67,7 @@ public class BankAccountController {
 
         return ResponseEntity.ok(bankAccountService.login(dto));
     }
+
 
 
 
