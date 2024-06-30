@@ -38,16 +38,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 
     }
-    @ExceptionHandler(AppException.class)
-    public ResponseEntity<BankResponseDto> handleAppException(AppException exception){
 
-        BankResponseDto responseDto = BankResponseDto.builder()
-                .message(exception.getMessage())
-                .statusCode(BankAccountUtils.JWT_EXCEPTION).build();
-
-        return new ResponseEntity<>(responseDto,HttpStatus.BAD_REQUEST);
-
-    }
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<BankResponseDto> handleUsernameNotFoundException(UsernameNotFoundException exception,WebRequest request){
