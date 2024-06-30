@@ -12,7 +12,9 @@ public class BankAccountUtils {
             +" Please Verify your email using the link sent to your mail." +
             " Please note that account will be created only after a successfull Id verification." +
             " We will email you soon with confirmation";
-
+    public static final  String ADD_BANK_ACCOUNT_REQUEST_RAISED_CODE = "S-002";
+    public static final String ADD_BANK_ACCOUNT_REQUEST_RAISED_CODE_MSG = "your request to open an additional " +
+            "bank account is successfull, we will email you soon with confirmation";
     public static final String UNABLE_TO_UPLOAD_FILE_CODE = "E-101";
 
     public static final String FILE_FIELD_EMPTY_CODE = "E-102";

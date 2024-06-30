@@ -2,6 +2,7 @@ package com.bankingapp.account_services.service.impl;
 
 import com.bankingapp.account_services.config.SecurityConfig;
 import com.bankingapp.account_services.dto.*;
+import com.bankingapp.account_services.entity.AccountType;
 import com.bankingapp.account_services.entity.BankAccount;
 import com.bankingapp.account_services.entity.User;
 import com.bankingapp.account_services.entity.VerificationToken;
@@ -199,6 +200,45 @@ public class BankAccountServiceImpl implements BankAccountService {
         User user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         return user.getBankAccounts().stream().map(this::entityToDto).toList();
+
+
+    }
+
+    @Override
+    public BankResponseDto addBankAccount(HttpServletRequest request, String accountType) {
+        String token = jwtUtils.extractJwtFromRequest(request);
+
+        String username = jwtUtils.getUsername(token);
+
+        User user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        BankAccount bankAccount = BankAccount.builder()
+                .accountType(AccountType.valueOf(accountType))
+                .accountStatus("PENDING VERIFICATION")
+                .accountBalance(BigDecimal.ZERO)
+                .accountNumber(BankAccountUtils.generateBankAccountNumber())
+                .build();
+
+        if (bankAccount.getAccountType().name().equals("CHECKING")){
+
+            bankAccount.setInterestRate(1);
+            bankAccount.setOverdraftLimit(5000);
+        }else if (bankAccount.getAccountType().name().equals("SAVINGS")) {
+            bankAccount.setInterestRate(8);
+            bankAccount.setOverdraftLimit(0);
+        }else {
+            throw new RuntimeException("Account type can either be SAVINGS or CHECKING");
+        }
+
+        user.getBankAccounts().add(bankAccount);
+        bankAccount.setUser(user);
+
+        bankAccountRepository.save(bankAccount);
+
+        return BankResponseDto.builder()
+                .statusCode(BankAccountUtils.ADD_BANK_ACCOUNT_REQUEST_RAISED_CODE)
+                .message(BankAccountUtils.ADD_BANK_ACCOUNT_REQUEST_RAISED_CODE_MSG)
+                .build();
 
 
     }

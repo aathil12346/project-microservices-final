@@ -19,4 +19,6 @@ public interface BankAccountService {
     UserInfoDto getUserDetails(HttpServletRequest request);
 
     List<BankAccountInfoDto> getAccountDetails(HttpServletRequest request);
+
+    BankResponseDto addBankAccount(HttpServletRequest request,String accountType);
 }

@@ -80,6 +80,12 @@ public class BankAccountController {
         return new ResponseEntity<>(bankAccountService.getAccountDetails(request),HttpStatus.OK);
     }
 
+    @PostMapping("/add-account")
+    public ResponseEntity<BankResponseDto> addAccount(HttpServletRequest request,@RequestParam(value = "accountType") String accountType){
+
+        return new ResponseEntity<>(bankAccountService.addBankAccount(request,accountType),HttpStatus.OK);
+    }
+
 
 
 
