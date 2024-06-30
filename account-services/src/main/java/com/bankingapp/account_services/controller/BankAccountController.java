@@ -1,9 +1,6 @@
 package com.bankingapp.account_services.controller;
 
-import com.bankingapp.account_services.dto.BankResponseDto;
-import com.bankingapp.account_services.dto.CreateBankAccountRequestDto;
-import com.bankingapp.account_services.dto.LoginInformationDto;
-import com.bankingapp.account_services.dto.UserInfoDto;
+import com.bankingapp.account_services.dto.*;
 import com.bankingapp.account_services.entity.BankAccount;
 import com.bankingapp.account_services.entity.User;
 import com.bankingapp.account_services.entity.VerificationToken;
@@ -79,9 +76,11 @@ public class BankAccountController {
     }
 
     @GetMapping("/get-user-bank-accounts")
-    public ResponseEntity<List<BankAccount>> getBankAccounts(HttpServletRequest request){
+    public ResponseEntity<List<BankAccountInfoDto>> getBankAccounts(HttpServletRequest request){
         return new ResponseEntity<>(bankAccountService.getAccountDetails(request),HttpStatus.OK);
     }
+
+
 
 
 

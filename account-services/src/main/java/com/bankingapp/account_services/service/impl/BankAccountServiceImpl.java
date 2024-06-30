@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class BankAccountServiceImpl implements BankAccountService {
@@ -197,6 +198,22 @@ public class BankAccountServiceImpl implements BankAccountService {
 
         User user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
+        return user.getBankAccounts().stream().map(this::entityToDto).toList();
+
+
+    }
+
+    private BankAccountInfoDto entityToDto(BankAccount account){
+
+        return BankAccountInfoDto.builder()
+                .accountBalance(account.getAccountBalance())
+                .accountNumber(account.getAccountNumber())
+                .accountStatus(account.getAccountStatus())
+                .accountType(account.getAccountType())
+                .interestRate(account.getInterestRate())
+                .createdAt(account.getCreatedAt())
+                .modifiedAt(account.getModifiedAt())
+                .overdraftLimit(account.getOverdraftLimit()).build();
 
 
     }
