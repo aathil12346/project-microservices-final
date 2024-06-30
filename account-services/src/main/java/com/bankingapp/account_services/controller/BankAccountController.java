@@ -4,6 +4,7 @@ import com.bankingapp.account_services.dto.BankResponseDto;
 import com.bankingapp.account_services.dto.CreateBankAccountRequestDto;
 import com.bankingapp.account_services.dto.LoginInformationDto;
 import com.bankingapp.account_services.dto.UserInfoDto;
+import com.bankingapp.account_services.entity.BankAccount;
 import com.bankingapp.account_services.entity.User;
 import com.bankingapp.account_services.entity.VerificationToken;
 import com.bankingapp.account_services.repository.VerificationTokenRepository;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("v1/account-services")
@@ -74,6 +76,11 @@ public class BankAccountController {
     public ResponseEntity<UserInfoDto> getUserDetails(HttpServletRequest request){
 
         return new ResponseEntity<>(bankAccountService.getUserDetails(request),HttpStatus.OK);
+    }
+
+    @GetMapping("/get-user-bank-accounts")
+    public ResponseEntity<List<BankAccount>> getBankAccounts(HttpServletRequest request){
+        return new ResponseEntity<>(bankAccountService.getAccountDetails(request),HttpStatus.OK);
     }
 
 

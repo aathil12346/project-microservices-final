@@ -28,6 +28,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -183,6 +185,19 @@ public class BankAccountServiceImpl implements BankAccountService {
                 .streetName(user.getStreetName())
                 .isEmailVerified(user.isEmailVerified())
                 .build();
+
+    }
+
+    @Override
+    public List<BankAccountInfoDto> getAccountDetails(HttpServletRequest request) {
+
+        String token = jwtUtils.extractJwtFromRequest(request);
+
+        String username = jwtUtils.getUsername(token);
+
+        User user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+
 
     }
 
