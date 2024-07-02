@@ -243,6 +243,35 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     }
 
+    @Override
+    public BankResponseDto changeAddress(AddressChangeRequestDto requestDto, MultipartFile govermentId, HttpServletRequest request) {
+
+        String token = jwtUtils.extractJwtFromRequest(request);
+
+        String username = jwtUtils.getUsername(token);
+
+        User user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        try {
+            fileUploadService.uploadFile(govermentId,user.getEmail()+" address-change");
+        }catch (IOException exception){
+            return BankResponseDto.builder()
+                    .message(exception.getMessage())
+                    .statusCode(BankAccountUtils.UNABLE_TO_UPLOAD_FILE_CODE).build();
+        }
+
+        user.setPostCode(requestDto.getPostcode());
+        user.setStreetName(requestDto.getStreetName());
+
+        userRepository.save(user);
+
+        return BankResponseDto.builder()
+                .statusCode(BankAccountUtils.ADDRESS_CHANGE_REQUEST_SUCCESSFULL_CODE)
+                .message(BankAccountUtils.ADDRESS_CHANGE_REQUEST_SUCCESSFULL_MSG).build();
+
+
+    }
+
     private BankAccountInfoDto entityToDto(BankAccount account){
 
         return BankAccountInfoDto.builder()

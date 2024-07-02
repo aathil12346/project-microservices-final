@@ -27,6 +27,10 @@ public class BankAccountUtils {
     public static final String JWT_EXCEPTION = "E-200";
     public static final String USERNAME_NOT_FOUND_CODE = "E-300";
 
+    public static final String ADDRESS_CHANGE_REQUEST_SUCCESSFULL_CODE = "S-003";
+    public static final String ADDRESS_CHANGE_REQUEST_SUCCESSFULL_MSG = "We have successfully received your address change request" +
+            "we will cross check with your governemntId and will soon email you with confimration";
+
     public static String generateBankAccountNumber() {
         Random random = new Random();
         int randomNumber = random.nextInt(900000) + 100000;

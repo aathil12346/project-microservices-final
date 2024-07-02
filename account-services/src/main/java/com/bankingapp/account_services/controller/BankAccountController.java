@@ -64,14 +64,12 @@ public class BankAccountController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody LoginInformationDto dto){
-
         return ResponseEntity.ok(bankAccountService.login(dto));
     }
 
 
     @GetMapping("/get-user-details")
     public ResponseEntity<UserInfoDto> getUserDetails(HttpServletRequest request){
-
         return new ResponseEntity<>(bankAccountService.getUserDetails(request),HttpStatus.OK);
     }
 
@@ -82,8 +80,31 @@ public class BankAccountController {
 
     @PostMapping("/add-account")
     public ResponseEntity<BankResponseDto> addAccount(HttpServletRequest request,@RequestParam(value = "accountType") String accountType){
-
         return new ResponseEntity<>(bankAccountService.addBankAccount(request,accountType),HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/change-address",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<BankResponseDto> changeAddress(@Valid @RequestPart(value = "requestDto") AddressChangeRequestDto requestDto,
+                                                         @RequestPart(value = "file")MultipartFile governmentId,HttpServletRequest request){
+
+        if (governmentId == null || governmentId.isEmpty()) {
+            return new ResponseEntity<>(BankResponseDto.builder()
+                    .statusCode(BankAccountUtils.FILE_FIELD_EMPTY_CODE)
+                    .message(BankAccountUtils.FILE_FIELD_EMPTY_MSG).build(),
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        BankResponseDto bankResponseDto = bankAccountService.changeAddress(requestDto,governmentId,request);
+
+        if (bankResponseDto.getStatusCode().equals("S-003")){
+
+            return new ResponseEntity<>(bankResponseDto,HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(bankResponseDto,HttpStatus.EXPECTATION_FAILED);
+
+
+
     }
 
 
