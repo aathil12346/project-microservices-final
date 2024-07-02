@@ -22,6 +22,6 @@ public interface BankAccountService {
 
     BankResponseDto addBankAccount(HttpServletRequest request,String accountType);
 
-    BankResponseDto changeAddress(AddressChangeRequestDto requestDto,MultipartFile govermentId,
+    BankResponseDto changeAddress(AddressChangeRequestDto requestDto,MultipartFile governmentId,
                                   HttpServletRequest request);
 }

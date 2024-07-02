@@ -173,11 +173,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Override
     public UserInfoDto getUserDetails(HttpServletRequest request) {
 
-        String token = jwtUtils.extractJwtFromRequest(request);
-
-        String username = jwtUtils.getUsername(token);
-
-        User user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User user = getUser(request);
 
         return UserInfoDto.builder()
                 .email(user.getEmail())
@@ -193,11 +189,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Override
     public List<BankAccountInfoDto> getAccountDetails(HttpServletRequest request) {
 
-        String token = jwtUtils.extractJwtFromRequest(request);
-
-        String username = jwtUtils.getUsername(token);
-
-        User user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User user = getUser(request);
 
         return user.getBankAccounts().stream().map(this::entityToDto).toList();
 
@@ -206,11 +198,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     @Override
     public BankResponseDto addBankAccount(HttpServletRequest request, String accountType) {
-        String token = jwtUtils.extractJwtFromRequest(request);
-
-        String username = jwtUtils.getUsername(token);
-
-        User user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User user = getUser(request);
 
         BankAccount bankAccount = BankAccount.builder()
                 .accountType(AccountType.valueOf(accountType))
@@ -242,18 +230,21 @@ public class BankAccountServiceImpl implements BankAccountService {
 
 
     }
-
-    @Override
-    public BankResponseDto changeAddress(AddressChangeRequestDto requestDto, MultipartFile govermentId, HttpServletRequest request) {
-
+    private User getUser(HttpServletRequest request) {
         String token = jwtUtils.extractJwtFromRequest(request);
 
         String username = jwtUtils.getUsername(token);
 
-        User user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    @Override
+    public BankResponseDto changeAddress(AddressChangeRequestDto requestDto, MultipartFile governmentId, HttpServletRequest request) {
+
+        User user = getUser(request);
 
         try {
-            fileUploadService.uploadFile(govermentId,user.getEmail()+" address-change");
+            fileUploadService.uploadFile(governmentId,user.getEmail()+" address-change");
         }catch (IOException exception){
             return BankResponseDto.builder()
                     .message(exception.getMessage())
