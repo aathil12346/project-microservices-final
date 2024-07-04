@@ -264,6 +264,11 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     }
 
+    @Override
+    public boolean doesAccountExists(String accountNumber) {
+        return bankAccountRepository.findBankAccountByAccountNumber(accountNumber);
+    }
+
     private BankAccountInfoDto entityToDto(BankAccount account){
 
         return BankAccountInfoDto.builder()

@@ -24,4 +24,8 @@ public interface BankAccountService {
 
     BankResponseDto changeAddress(AddressChangeRequestDto requestDto,MultipartFile governmentId,
                                   HttpServletRequest request);
+
+    boolean doesAccountExists(String accountNumber);
+
+
 }

@@ -10,6 +10,7 @@ import com.bankingapp.account_services.service.S3FileUploadService;
 import com.bankingapp.account_services.utils.BankAccountUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -106,6 +107,13 @@ public class BankAccountController {
 
 
     }
+
+    @GetMapping("/account-exists/{accountNumber}")
+    public boolean findAccountExists(@PathVariable(value = "accountNumber") String accountNumber){
+        return bankAccountService.doesAccountExists(accountNumber);
+    }
+
+
 
 
 
