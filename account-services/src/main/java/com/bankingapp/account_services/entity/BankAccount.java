@@ -31,6 +31,7 @@ public class BankAccount {
     private LocalDateTime createdAt;
     @UpdateTimestamp
     private LocalDateTime modifiedAt;
+    private BigDecimal feeIncurred;
     @ManyToOne(optional = false)
     @JoinColumn(referencedColumnName = "id",name = "user_id")
     private User user;
