@@ -12,5 +12,6 @@ public class AmountTransferRequestDto {
 
     private String recipientAccountNumber;
     private String senderAccountNumber;
+    private boolean allowOverdraft;
     private BigDecimal amountToBeTransferred;
 }
