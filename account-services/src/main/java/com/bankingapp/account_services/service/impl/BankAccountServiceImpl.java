@@ -84,7 +84,8 @@ public class BankAccountServiceImpl implements BankAccountService {
         BankAccount bankAccount = BankAccount.builder().
                 accountNumber(BankAccountUtils.generateBankAccountNumber()).
                 accountBalance(BigDecimal.ZERO).
-                accountStatus("PENDING VERIFICATION").
+                accountStatus("PENDING VERIFICATION")
+                .feeIncurred(BigDecimal.ZERO).
                 accountType(requestDto.getAccountType()).build();
 
         if (bankAccount.getAccountType().name().equals("CHECKING")){
