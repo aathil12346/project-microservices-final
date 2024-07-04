@@ -16,6 +16,7 @@ import com.bankingapp.account_services.service.S3FileUploadService;
 import com.bankingapp.account_services.utils.BankAccountUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -85,17 +86,14 @@ public class BankAccountServiceImpl implements BankAccountService {
                 accountNumber(BankAccountUtils.generateBankAccountNumber()).
                 accountBalance(BigDecimal.ZERO).
                 accountStatus("PENDING VERIFICATION")
-                .feeIncurred(BigDecimal.ZERO).
-                accountType(requestDto.getAccountType()).build();
+                .accountType(requestDto.getAccountType()).build();
 
         if (bankAccount.getAccountType().name().equals("CHECKING")){
 
             bankAccount.setInterestRate(1);
-            bankAccount.setOverdraftLimit(5000);
         }else {
 
             bankAccount.setInterestRate(8);
-            bankAccount.setOverdraftLimit(0);
         }
 
         newUser.getBankAccounts().add(bankAccount);
@@ -211,10 +209,8 @@ public class BankAccountServiceImpl implements BankAccountService {
         if (bankAccount.getAccountType().name().equals("CHECKING")){
 
             bankAccount.setInterestRate(1);
-            bankAccount.setOverdraftLimit(5000);
         }else if (bankAccount.getAccountType().name().equals("SAVINGS")) {
             bankAccount.setInterestRate(8);
-            bankAccount.setOverdraftLimit(0);
         }else {
             throw new RuntimeException("Account type can either be SAVINGS or CHECKING");
         }
@@ -266,7 +262,15 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     @Override
     public boolean doesAccountExists(String accountNumber) {
-        return bankAccountRepository.findBankAccountByAccountNumber(accountNumber);
+        return bankAccountRepository.existsBankAccountsByAccountNumber(accountNumber);
+    }
+
+    @Override
+    public ResponseEntity<HttpStatus> debitFromAnAccount(AmountTransferRequestDto requestDto,boolean allowOverDraft) {
+        BankAccount account = bankAccountRepository.findBankAccountByAccountNumber(requestDto.getSenderAccountNumber());
+
+        if (account.getAccountBalance().compareTo(requestDto.getAmountToBeTransferred()) < 0);
+        return null;
     }
 
     private BankAccountInfoDto entityToDto(BankAccount account){
@@ -279,7 +283,7 @@ public class BankAccountServiceImpl implements BankAccountService {
                 .interestRate(account.getInterestRate())
                 .createdAt(account.getCreatedAt())
                 .modifiedAt(account.getModifiedAt())
-                .overdraftLimit(account.getOverdraftLimit()).build();
+                .build();
 
 
     }

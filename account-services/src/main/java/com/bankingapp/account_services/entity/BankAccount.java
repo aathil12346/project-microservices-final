@@ -26,12 +26,10 @@ public class BankAccount {
     private AccountType accountType;
     private String accountStatus;
     private double interestRate;
-    private double overdraftLimit;
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp
     private LocalDateTime modifiedAt;
-    private BigDecimal feeIncurred;
     @ManyToOne(optional = false)
     @JoinColumn(referencedColumnName = "id",name = "user_id")
     private User user;
