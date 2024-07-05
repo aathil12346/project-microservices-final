@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(url = "http://localhost:8082",value = "ACCOUNT-SERVICE")
+@FeignClient(url = "http://localhost:8081/v1/account-services",value = "ACCOUNT-SERVICE")
 public interface ApiClient {
 
     @GetMapping("/account-exists/{accountNumber}")
