@@ -267,22 +267,36 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     @Override
     public ResponseEntity<HttpStatus> debitFromAnAccount(AmountTransferRequestDto requestDto) {
-        BankAccount account = bankAccountRepository.findBankAccountByAccountNumber(requestDto.getSenderAccountNumber());
-
-        if (account.getAccountBalance().compareTo(requestDto.getAmountToBeTransferred()) < 0){
+        BankAccount senderAccount = bankAccountRepository.findBankAccountByAccountNumber(requestDto.getSenderAccountNumber());
+        if (senderAccount.getAccountBalance().compareTo(requestDto.getAmountToBeTransferred()) < 0){
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
 
-        account.setAccountBalance(account.getAccountBalance().subtract(requestDto.getAmountToBeTransferred()));
-        bankAccountRepository.save(account);
+        senderAccount.setAccountBalance(senderAccount.getAccountBalance().subtract(requestDto.getAmountToBeTransferred()));
+        bankAccountRepository.save(senderAccount);
+        EmailRequestDto emailRequestDto = EmailRequestDto.builder()
+                .subject("Amount Debited")
+                .message("An Amount of : " + requestDto.getAmountToBeTransferred() + " " + "was debited to account number : " + requestDto.getRecipientAccountNumber())
+                .recipient(senderAccount.getUser().getEmail()).build();
+        apiClient.sendEmail(emailRequestDto);
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
 
     @Override
     public ResponseEntity<HttpStatus> creditToAnAccount(AmountTransferRequestDto requestDto) {
-        BankAccount account = bankAccountRepository.findBankAccountByAccountNumber(requestDto.getRecipientAccountNumber());
-        account.setAccountBalance(account.getAccountBalance().add(requestDto.getAmountToBeTransferred()));
+        BankAccount recipientAccount = bankAccountRepository.findBankAccountByAccountNumber(requestDto.getRecipientAccountNumber());
+        BankAccount senderAccount = bankAccountRepository.findBankAccountByAccountNumber(requestDto.getSenderAccountNumber());
+
+        recipientAccount.setAccountBalance(recipientAccount.getAccountBalance().add(requestDto.getAmountToBeTransferred()));
+        bankAccountRepository.save(recipientAccount);
+
+        EmailRequestDto emailRequestDto = EmailRequestDto.builder()
+                .subject("Amount Credited")
+                .message("An Amount of : " + requestDto.getAmountToBeTransferred() + " " + "was credited to account number : " + requestDto.getRecipientAccountNumber()
+                + " " + "from account number : " + senderAccount.getAccountNumber())
+                .recipient(recipientAccount.getUser().getEmail()).build();
+        apiClient.sendEmail(emailRequestDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
