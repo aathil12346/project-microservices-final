@@ -266,11 +266,24 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
     @Override
-    public ResponseEntity<HttpStatus> debitFromAnAccount(AmountTransferRequestDto requestDto,boolean allowOverDraft) {
+    public ResponseEntity<HttpStatus> debitFromAnAccount(AmountTransferRequestDto requestDto) {
         BankAccount account = bankAccountRepository.findBankAccountByAccountNumber(requestDto.getSenderAccountNumber());
 
-        if (account.getAccountBalance().compareTo(requestDto.getAmountToBeTransferred()) < 0);
-        return null;
+        if (account.getAccountBalance().compareTo(requestDto.getAmountToBeTransferred()) < 0){
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+
+        account.setAccountBalance(account.getAccountBalance().subtract(requestDto.getAmountToBeTransferred()));
+        bankAccountRepository.save(account);
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
+    @Override
+    public ResponseEntity<HttpStatus> creditToAnAccount(AmountTransferRequestDto requestDto) {
+        BankAccount account = bankAccountRepository.findBankAccountByAccountNumber(requestDto.getRecipientAccountNumber());
+        account.setAccountBalance(account.getAccountBalance().add(requestDto.getAmountToBeTransferred()));
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     private BankAccountInfoDto entityToDto(BankAccount account){

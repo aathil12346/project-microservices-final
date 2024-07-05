@@ -113,6 +113,16 @@ public class BankAccountController {
         return bankAccountService.doesAccountExists(accountNumber);
     }
 
+    @PostMapping("/debit-money")
+    public ResponseEntity<HttpStatus> debitFromAnAccount(@RequestBody AmountTransferRequestDto requestDto){
+        return bankAccountService.debitFromAnAccount(requestDto);
+    }
+
+    @PostMapping("/credit-money")
+    public ResponseEntity<HttpStatus> creditToAnAccount(@RequestBody AmountTransferRequestDto requestDto){
+        return bankAccountService.creditToAnAccount(requestDto);
+    }
+
 
 
 

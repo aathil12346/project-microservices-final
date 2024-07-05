@@ -30,5 +30,7 @@ public interface BankAccountService {
 
     boolean doesAccountExists(String accountNumber);
 
-    ResponseEntity<HttpStatus> debitFromAnAccount(AmountTransferRequestDto requestDto,boolean allowOverDraft);
+    ResponseEntity<HttpStatus> debitFromAnAccount(AmountTransferRequestDto requestDto);
+
+    ResponseEntity<HttpStatus> creditToAnAccount(AmountTransferRequestDto requestDto);
 }
