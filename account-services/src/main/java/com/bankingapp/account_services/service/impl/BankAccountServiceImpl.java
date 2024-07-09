@@ -266,10 +266,10 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
     @Override
-    public ResponseEntity<HttpStatus> debitFromAnAccount(AmountTransferRequestDto requestDto) {
+    public HttpStatus debitFromAnAccount(AmountTransferRequestDto requestDto) {
         BankAccount senderAccount = bankAccountRepository.findBankAccountByAccountNumber(requestDto.getSenderAccountNumber());
         if (senderAccount.getAccountBalance().compareTo(requestDto.getAmountToBeTransferred()) < 0){
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+            return HttpStatus.EXPECTATION_FAILED;
         }
 
         senderAccount.setAccountBalance(senderAccount.getAccountBalance().subtract(requestDto.getAmountToBeTransferred()));
@@ -279,12 +279,12 @@ public class BankAccountServiceImpl implements BankAccountService {
                 .message("An Amount of : " + requestDto.getAmountToBeTransferred() + " " + "was debited to account number : " + requestDto.getRecipientAccountNumber())
                 .recipient(senderAccount.getUser().getEmail()).build();
         apiClient.sendEmail(emailRequestDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return HttpStatus.OK;
 
     }
 
     @Override
-    public ResponseEntity<HttpStatus> creditToAnAccount(AmountTransferRequestDto requestDto) {
+    public HttpStatus creditToAnAccount(AmountTransferRequestDto requestDto) {
         BankAccount recipientAccount = bankAccountRepository.findBankAccountByAccountNumber(requestDto.getRecipientAccountNumber());
         BankAccount senderAccount = bankAccountRepository.findBankAccountByAccountNumber(requestDto.getSenderAccountNumber());
 
@@ -297,7 +297,7 @@ public class BankAccountServiceImpl implements BankAccountService {
                 + " " + "from account number : " + senderAccount.getAccountNumber())
                 .recipient(recipientAccount.getUser().getEmail()).build();
         apiClient.sendEmail(emailRequestDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return HttpStatus.OK;
     }
 
     private BankAccountInfoDto entityToDto(BankAccount account){

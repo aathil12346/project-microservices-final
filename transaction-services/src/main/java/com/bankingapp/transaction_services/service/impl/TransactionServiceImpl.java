@@ -2,6 +2,7 @@ package com.bankingapp.transaction_services.service.impl;
 
 import com.bankingapp.transaction_services.dto.AmountTransferRequestDto;
 import com.bankingapp.transaction_services.dto.BankResponseDto;
+import com.bankingapp.transaction_services.entity.Transaction;
 import com.bankingapp.transaction_services.repository.TransactionRepository;
 import com.bankingapp.transaction_services.service.ApiClient;
 import com.bankingapp.transaction_services.service.TransactionService;
@@ -35,17 +36,32 @@ public class TransactionServiceImpl implements TransactionService {
                     .statusCode(TransactionUtils.RECEIVER_ACCOUNT_DOES_NOT_EXISTS_CODE).build();
         }
 
-        ResponseEntity<HttpStatus> debitStatus = apiClient.debitFromAnAccount(requestDto);
-        ResponseEntity<HttpStatus> creditStatus = apiClient.creditToAnAccount(requestDto);
+        HttpStatus debitStatus = apiClient.debitFromAnAccount(requestDto);
 
-        if (debitStatus.getStatusCode().equals(HttpStatus.EXPECTATION_FAILED) || creditStatus.getStatusCode().equals(HttpStatus.EXPECTATION_FAILED)){
-
+        if (debitStatus.equals(HttpStatus.EXPECTATION_FAILED)){
             return BankResponseDto.builder()
                     .message(TransactionUtils.TRANSACTION_FAILED_MSG)
                     .statusCode(TransactionUtils.TRANSACTION_FAILED_CODE).build();
-
-
         }
+        HttpStatus creditStatus = apiClient.creditToAnAccount(requestDto);
+
+        if (creditStatus.equals(HttpStatus.EXPECTATION_FAILED)){
+            return BankResponseDto.builder()
+                    .message(TransactionUtils.TRANSACTION_FAILED_MSG)
+                    .statusCode(TransactionUtils.TRANSACTION_FAILED_CODE).build();
+        }
+
+
+
+        Transaction transaction = Transaction.builder()
+                .amount(requestDto.getAmountToBeTransferred())
+                .senderAccountNumber(requestDto.getSenderAccountNumber())
+                .receiverAccountNumber(requestDto.getRecipientAccountNumber())
+                .status("PROCESSED")
+                .build();
+
+        transactionRepository.save(transaction);
+
         return BankResponseDto.builder()
                 .message(TransactionUtils.TRANSACTION_SUCCESS_MSG)
                 .statusCode(TransactionUtils.TRANSACTION_SUCCESS_CODE).build();

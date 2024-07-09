@@ -17,9 +17,9 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String transactionId;
-    private String transactionType;
+    private String senderAccountNumber;
     private BigDecimal amount;
-    private String accountNumber;
+    private String receiverAccountNumber;
     private String status;
 
 }

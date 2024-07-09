@@ -16,9 +16,9 @@ public interface ApiClient {
     boolean findAccountExists(@PathVariable(value = "accountNumber") String accountNumber);
 
     @PostMapping("/debit-money")
-    ResponseEntity<HttpStatus> debitFromAnAccount(@RequestBody AmountTransferRequestDto requestDto);
+    HttpStatus debitFromAnAccount(@RequestBody AmountTransferRequestDto requestDto);
 
     @PostMapping("/credit-money")
-    ResponseEntity<HttpStatus> creditToAnAccount(@RequestBody AmountTransferRequestDto requestDto);
+    HttpStatus creditToAnAccount(@RequestBody AmountTransferRequestDto requestDto);
 
 }
