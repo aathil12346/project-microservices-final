@@ -12,6 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Service
 public class TransactionServiceImpl implements TransactionService {
     @Autowired
@@ -58,6 +61,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .senderAccountNumber(requestDto.getSenderAccountNumber())
                 .receiverAccountNumber(requestDto.getRecipientAccountNumber())
                 .status("PROCESSED")
+                .timeOfTransaction(LocalDateTime.now())
                 .build();
 
         transactionRepository.save(transaction);
@@ -67,4 +71,10 @@ public class TransactionServiceImpl implements TransactionService {
                 .statusCode(TransactionUtils.TRANSACTION_SUCCESS_CODE).build();
 
     }
+
+    @Override
+    public List<Transaction> viewTransactions(String accountNumber) {
+        return transactionRepository.findTransactionBySenderAccountNumberOrReceiverAccountNumber(accountNumber,accountNumber);
+    }
 }
+

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -21,5 +22,6 @@ public class Transaction {
     private BigDecimal amount;
     private String receiverAccountNumber;
     private String status;
+    private LocalDateTime timeOfTransaction;
 
 }
