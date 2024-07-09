@@ -24,6 +24,12 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public BankResponseDto transfer(AmountTransferRequestDto requestDto) {
 
+        if (requestDto.getSenderAccountNumber().equals(requestDto.getRecipientAccountNumber())){
+            return BankResponseDto.builder()
+                    .message(TransactionUtils.TRANSACTION_FAILED_MSG)
+                    .statusCode(TransactionUtils.TRANSACTION_FAILED_CODE).build();
+        }
+
         boolean doesSenderAccountExists = apiClient.findAccountExists(requestDto.getSenderAccountNumber());
 
         if (!doesSenderAccountExists){
@@ -38,6 +44,7 @@ public class TransactionServiceImpl implements TransactionService {
                     .message(TransactionUtils.RECEIVER_ACCOUNT_DOES_NOT_EXISTS_MSG)
                     .statusCode(TransactionUtils.RECEIVER_ACCOUNT_DOES_NOT_EXISTS_CODE).build();
         }
+
 
         HttpStatus debitStatus = apiClient.debitFromAnAccount(requestDto);
 
