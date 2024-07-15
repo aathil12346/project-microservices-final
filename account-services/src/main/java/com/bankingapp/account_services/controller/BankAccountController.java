@@ -124,6 +124,11 @@ public class BankAccountController {
         return bankAccountService.creditToAnAccount(requestDto);
     }
 
+    @GetMapping("/get-user")
+    public UserSecurityInfo getUser(@RequestParam(value = "email")String email){
+        return bankAccountService.getUser(email);
+    }
+
 
 
 

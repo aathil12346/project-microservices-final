@@ -300,6 +300,19 @@ public class BankAccountServiceImpl implements BankAccountService {
         return HttpStatus.OK;
     }
 
+    @Override
+    public UserSecurityInfo getUser(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isEmpty()){
+            throw new UsernameNotFoundException("Username not found");
+        }
+        UserSecurityInfo info = UserSecurityInfo.builder()
+                .email(user.get().getEmail())
+                .password(user.get().getPassword())
+                .role(user.get().getRole()).build();
+        return info;
+    }
+
     private BankAccountInfoDto entityToDto(BankAccount account){
 
         return BankAccountInfoDto.builder()

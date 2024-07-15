@@ -45,6 +45,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,"v1/account-services/account-exists/{accountNumber}").permitAll()
                         .requestMatchers(HttpMethod.POST,"v1/account-services/debit-money").permitAll()
                         .requestMatchers(HttpMethod.POST,"v1/account-services/credit-money").permitAll()
+                        .requestMatchers(HttpMethod.GET,"v1/account-services/get-user").permitAll()
                         .anyRequest().authenticated())
 
                 .exceptionHandling(e -> e.authenticationEntryPoint(authenticationEntryPoint) )

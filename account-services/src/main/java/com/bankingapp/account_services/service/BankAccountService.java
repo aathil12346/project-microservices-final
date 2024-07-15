@@ -2,6 +2,7 @@ package com.bankingapp.account_services.service;
 
 import com.bankingapp.account_services.dto.*;
 import com.bankingapp.account_services.entity.BankAccount;
+import com.bankingapp.account_services.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.weaver.ResolvedPointcutDefinition;
 import org.springframework.http.HttpStatus;
@@ -33,4 +34,6 @@ public interface BankAccountService {
     HttpStatus debitFromAnAccount(AmountTransferRequestDto requestDto);
 
     HttpStatus creditToAnAccount(AmountTransferRequestDto requestDto);
+
+    UserSecurityInfo getUser(String email);
 }
