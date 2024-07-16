@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("v1/account-services")
+@RequestMapping(value = "v1/account-services")
 
 public class BankAccountController {
 

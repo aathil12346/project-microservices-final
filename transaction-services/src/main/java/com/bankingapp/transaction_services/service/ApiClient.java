@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(url = "http://localhost:8081/v1/account-services",value = "ACCOUNT-SERVICE")
+@FeignClient(name = "ACCOUNT-SERVICE",url = "v1/account-services")
 public interface ApiClient {
 
     @GetMapping("/account-exists/{accountNumber}")
