@@ -2,29 +2,17 @@ package com.bankingapp.transaction_services.service.impl;
 
 import com.bankingapp.transaction_services.dto.AmountTransferRequestDto;
 import com.bankingapp.transaction_services.dto.BankResponseDto;
-import com.bankingapp.transaction_services.dto.EmailRequestDto;
 import com.bankingapp.transaction_services.entity.Transaction;
 import com.bankingapp.transaction_services.repository.TransactionRepository;
 import com.bankingapp.transaction_services.security.JwtUtils;
 import com.bankingapp.transaction_services.service.ApiClient;
 import com.bankingapp.transaction_services.service.TransactionService;
 import com.bankingapp.transaction_services.utils.TransactionUtils;
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.properties.TextAlignment;
-import jakarta.mail.MessagingException;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
