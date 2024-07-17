@@ -6,19 +6,19 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name = "ACCOUNT-SERVICE",url = "v1/account-services")
+@FeignClient(name = "ACCOUNT-SERVICE")
 public interface ApiClient {
 
-    @GetMapping("/account-exists/{accountNumber}")
+    @GetMapping("v1/account-services/account-exists/{accountNumber}")
     boolean findAccountExists(@PathVariable(value = "accountNumber") String accountNumber);
 
-    @PostMapping("/debit-money")
+    @PostMapping("v1/account-services/debit-money")
     HttpStatus debitFromAnAccount(@RequestBody AmountTransferRequestDto requestDto);
 
-    @PostMapping("/credit-money")
+    @PostMapping("v1/account-services/credit-money")
     HttpStatus creditToAnAccount(@RequestBody AmountTransferRequestDto requestDto);
 
-    @GetMapping("/get-user")
+    @GetMapping("v1/account-services/get-user")
     UserSecurityInfo getUser(@RequestParam(value = "email")String email);
 
 }

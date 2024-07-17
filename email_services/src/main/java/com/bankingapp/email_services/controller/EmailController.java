@@ -2,10 +2,14 @@ package com.bankingapp.email_services.controller;
 
 import com.bankingapp.email_services.dto.EmailRequestDto;
 import com.bankingapp.email_services.service.EmailService;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.awt.*;
+import java.io.IOException;
 
 @RestController
 public class EmailController {
@@ -18,4 +22,5 @@ public class EmailController {
 
         emailService.sendEmail(requestDto);
     }
+
 }
