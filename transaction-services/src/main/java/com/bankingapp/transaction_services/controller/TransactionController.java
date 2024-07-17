@@ -29,10 +29,4 @@ public class TransactionController {
         return transactionService.viewTransactions(accountNumber);
     }
 
-    @PostMapping("/get-bank-statement")
-    public String getBankStatement(@RequestParam(value = "accountNumber") String accountNumber,
-                                   @RequestParam(value = "month")int month, HttpServletRequest request) throws MessagingException, IOException {
-
-        return transactionService.getBankStatement(accountNumber,month,request);
-    }
 }

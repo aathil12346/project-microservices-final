@@ -18,7 +18,7 @@ public class EmailService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    public void sendEmailWithAttachment(EmailRequestDto requestDto, MultipartFile attachment) throws MessagingException, IOException, MessagingException {
+    public void sendEmailWithAttachment(EmailRequestDto requestDto, byte[] bytes) throws MessagingException, IOException, MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
         // Use the true flag to indicate you need a multipart message
@@ -28,7 +28,7 @@ public class EmailService {
         helper.setText(requestDto.getMessage());
 
         // Attach the file to the email
-        helper.addAttachment(attachment.getOriginalFilename(), new ByteArrayResource(attachment.getBytes()));
+        helper.addAttachment("Bank Statement", new ByteArrayResource(bytes));
 
         // Send email
         javaMailSender.send(mimeMessage);

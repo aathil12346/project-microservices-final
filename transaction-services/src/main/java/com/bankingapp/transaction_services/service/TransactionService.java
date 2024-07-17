@@ -15,6 +15,6 @@ public interface TransactionService {
     BankResponseDto transfer(AmountTransferRequestDto requestDto);
 
     List<Transaction> viewTransactions(String accountNumber);
-
-    String getBankStatement(String accountNumber, int month, HttpServletRequest request) throws MessagingException, IOException;
 }
+
+
