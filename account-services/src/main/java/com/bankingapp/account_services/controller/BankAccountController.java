@@ -6,6 +6,7 @@ import com.bankingapp.account_services.entity.User;
 import com.bankingapp.account_services.entity.VerificationToken;
 import com.bankingapp.account_services.repository.VerificationTokenRepository;
 import com.bankingapp.account_services.service.BankAccountService;
+import com.bankingapp.account_services.service.LoanService;
 import com.bankingapp.account_services.service.S3FileUploadService;
 import com.bankingapp.account_services.utils.BankAccountUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,6 +31,8 @@ public class BankAccountController {
 
     @Autowired
     private BankAccountService bankAccountService;
+    @Autowired
+    private LoanService loanService;
 
 
     @PostMapping(value = "/create-account",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -105,9 +108,53 @@ public class BankAccountController {
 
         return new ResponseEntity<>(bankResponseDto,HttpStatus.EXPECTATION_FAILED);
 
-
-
     }
+
+    @PostMapping("/apply-unsecured-loan")
+    public ResponseEntity<BankResponseDto> applyForUnsecuredLoan(HttpServletRequest request,@Valid @RequestBody LoanRequestDto requestDto){
+        return new ResponseEntity<>(loanService.applyForUnSecuredLoan(request,requestDto),HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/apply-secured-loan",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<BankResponseDto> applyForSecuredLoan(HttpServletRequest request,@Valid @RequestPart(value = "requestDto")
+    LoanRequestDto requestDto,@RequestPart("file")MultipartFile collateralFile){
+
+        if (collateralFile == null || collateralFile.isEmpty()) {
+            return new ResponseEntity<>(BankResponseDto.builder()
+                    .statusCode(BankAccountUtils.FILE_FIELD_EMPTY_CODE)
+                    .message(BankAccountUtils.FILE_FIELD_EMPTY_MSG).build(),
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        BankResponseDto bankResponseDto = loanService.applyForSecuredLoan(request,requestDto,collateralFile);
+
+        if (bankResponseDto.getStatusCode().equals("S-004")){
+
+            return new ResponseEntity<>(bankResponseDto,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(bankResponseDto,HttpStatus.EXPECTATION_FAILED);
+    }
+
+    @GetMapping("/view-loan-details")
+    public ResponseEntity<LoanDetailsDto> getLoanDetails(HttpServletRequest request){
+        return new ResponseEntity<>(loanService.getLoanDetails(request),HttpStatus.OK);
+    }
+
+    @DeleteMapping("/cancel-loan/{id}")
+    public ResponseEntity<BankResponseDto> cancelLoan(@PathVariable("id")Long loanId){
+
+        BankResponseDto bankResponseDto = loanService.cancelLoan(loanId);
+
+        if (bankResponseDto.getStatusCode().equals(BankAccountUtils.LOAN_CANCELLATION_REQUEST_CODE)){
+
+            return new ResponseEntity<>(bankResponseDto,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(bankResponseDto,HttpStatus.EXPECTATION_FAILED);
+    }
+
+
+
+
 
     @GetMapping("/account-exists/{accountNumber}")
     public boolean findAccountExists(@PathVariable(value = "accountNumber") String accountNumber){

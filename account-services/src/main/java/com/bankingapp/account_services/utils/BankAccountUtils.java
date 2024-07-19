@@ -27,9 +27,19 @@ public class BankAccountUtils {
     public static final String JWT_EXCEPTION = "E-200";
     public static final String USERNAME_NOT_FOUND_CODE = "E-300";
 
+    public static final String LOAN_REQUEST_SUCCESS_CODE = "S-004";
+    public static final String LOAN_REQUEST_SUCCESS_MSG = "Your request for a loan has been received successfully" +
+            "Final decision will be informed through email";
+
+    public static final String LOAN_NOT_FOUND_CODE = "E-400";
+    public static final String LOAN_NOT_FOUND_MSG = "Loan with specified id does not exists";
+
+    public static final String LOAN_CANCELLATION_REQUEST_CODE = "S-005";
+    public static final String LOAN_CANCELLATION_REQUEST_MSG = "Loan cancellation request received";
+
     public static final String ADDRESS_CHANGE_REQUEST_SUCCESSFULL_CODE = "S-003";
     public static final String ADDRESS_CHANGE_REQUEST_SUCCESSFULL_MSG = "We have successfully received your address change request" +
-            "we will cross check with your governemntId and will soon email you with confimration";
+            "we will cross check with your government Id and will soon email you with confirmation";
 
     public static String generateBankAccountNumber() {
         Random random = new Random();
