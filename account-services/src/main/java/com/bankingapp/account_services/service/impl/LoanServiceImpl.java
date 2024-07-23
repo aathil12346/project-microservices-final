@@ -16,7 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class LoanServiceImpl implements LoanService {
@@ -81,15 +83,23 @@ public class LoanServiceImpl implements LoanService {
     }
 
     @Override
-    public LoanDetailsDto getLoanDetails(HttpServletRequest request) {
+    public List<LoanDetailsDto> getLoanDetails(HttpServletRequest request) {
 
         String token = utils.extractJwtFromRequest(request);
 
         String username = utils.getUsername(token);
 
-        Loan loan = loanRepository.findLoanByUser(username);
+        List<Loan> loan = loanRepository.findLoanByUser(username);
 
-        return LoanDetailsDto.builder()
+        return loan.stream().map(this::convertLoantoLoanDetailsDto).toList();
+
+
+
+    }
+
+    private LoanDetailsDto convertLoantoLoanDetailsDto(Loan loan){
+
+        return  LoanDetailsDto.builder()
                 .id(loan.getId())
                 .loanAmount(loan.getLoanAmount())
                 .loanType(loan.getLoanType())

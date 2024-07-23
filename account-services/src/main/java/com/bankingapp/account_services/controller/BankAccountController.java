@@ -136,7 +136,7 @@ public class BankAccountController {
     }
 
     @GetMapping("/view-loan-details")
-    public ResponseEntity<LoanDetailsDto> getLoanDetails(HttpServletRequest request){
+    public ResponseEntity<List<LoanDetailsDto>> getLoanDetails(HttpServletRequest request){
         return new ResponseEntity<>(loanService.getLoanDetails(request),HttpStatus.OK);
     }
 
