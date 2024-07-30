@@ -63,4 +63,19 @@ public class LoanRepositoryTests {
         retrievedLoans.forEach(loan1 -> Assertions.assertThat(loan1.getUser()).isEqualTo(savedLoan.getUser()));
 
     }
+
+    @Test
+    public void deleteLoanById(){
+
+        User savedUser = userRepository.save(user);
+
+        Loan savedLoan = loanRepository.save(loan);
+
+        loanRepository.delete(savedLoan);
+
+        List<Loan> loans = loanRepository.findLoanByUser(savedUser.getEmail());
+
+        Assertions.assertThat(loans).isEmpty();
+
+    }
 }
