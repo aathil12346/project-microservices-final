@@ -72,7 +72,6 @@ public class BankAccountRepositoryTests {
     @Test
     public void findBankAccountByAccountNumber(){
 
-
         userRepository.save(user);
         BankAccount savedAccount = bankAccountRepository.save(bankAccount);
 

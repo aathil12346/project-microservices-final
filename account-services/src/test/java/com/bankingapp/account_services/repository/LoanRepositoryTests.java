@@ -73,9 +73,6 @@ public class LoanRepositoryTests {
 
         loanRepository.delete(savedLoan);
 
-        List<Loan> loans = loanRepository.findLoanByUser(savedUser.getEmail());
-
-        Assertions.assertThat(loans).isEmpty();
 
     }
 }

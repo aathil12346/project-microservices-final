@@ -190,6 +190,8 @@ public class BankAccountServiceImpl implements BankAccountService {
 
         User user = getUser(request);
 
+
+
         return user.getBankAccounts().stream().map(this::entityToDto).toList();
 
 

@@ -8,11 +8,20 @@ import com.bankingapp.transaction_services.security.JwtUtils;
 import com.bankingapp.transaction_services.service.ApiClient;
 import com.bankingapp.transaction_services.service.TransactionService;
 import com.bankingapp.transaction_services.utils.TransactionUtils;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 
 @Service
@@ -21,8 +30,6 @@ public class TransactionServiceImpl implements TransactionService {
     private TransactionRepository transactionRepository;
     @Autowired
     private ApiClient apiClient;
-    @Autowired
-    private EmailService emailService;
     @Autowired
     private JwtUtils utils;
     @Override
@@ -86,6 +93,56 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public List<Transaction> viewTransactions(String accountNumber) {
         return transactionRepository.findTransactionBySenderAccountNumberOrReceiverAccountNumber(accountNumber,accountNumber);
+    }
+
+    @Override
+    public byte[] getBankStatement(List<Transaction> transactions) throws DocumentException {
+
+        Document document = new Document();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        PdfWriter.getInstance(document, baos);
+        document.open();
+
+
+        document.add(new Paragraph("Bank Statement"));
+        document.add(new Paragraph(" "));
+
+        PdfPTable table = new PdfPTable(6);
+
+        // Add table headers
+        table.addCell("Transaction ID");
+        table.addCell("Sender");
+        table.addCell("Amount");
+        table.addCell("Receiver");
+        table.addCell("Status");
+        table.addCell("Date");
+
+
+        for (Transaction transaction : transactions) {
+            table.addCell(transaction.getTransactionId());
+            table.addCell(transaction.getSenderAccountNumber());
+            table.addCell(transaction.getAmount().toString());
+            table.addCell(transaction.getReceiverAccountNumber());
+            table.addCell(transaction.getStatus());
+            table.addCell(transaction.getTimeOfTransaction().toString());
+        }
+
+
+        document.add(table);
+
+        document.close();
+        return baos.toByteArray();
+    }
+
+    @Override
+    public List<Transaction> getTransactionsByMonth(String accountNumber, int year, int month) {
+
+        YearMonth yearMonth = YearMonth.of(year, month);
+        LocalDateTime startDate = yearMonth.atDay(1).atStartOfDay();
+        LocalDateTime endDate = yearMonth.atEndOfMonth().atTime(23, 59, 59);
+
+        return transactionRepository.findByAccountNumberAndMonth(accountNumber,startDate,endDate);
     }
 
 }
