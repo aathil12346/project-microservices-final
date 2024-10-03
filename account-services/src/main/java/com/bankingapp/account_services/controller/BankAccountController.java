@@ -26,7 +26,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "v1/account-services")
-
+// controller exposes all APIs of the account service
+// for method explanation refer the service implementation classes
 public class BankAccountController {
 
     @Autowired
@@ -39,6 +40,7 @@ public class BankAccountController {
     public ResponseEntity<BankResponseDto> createBankAccount(@Valid @RequestPart(value = "requestDto") CreateBankAccountRequestDto requestDto,
                                              @RequestPart(value = "file") MultipartFile governmentId) throws IOException {
 
+        //check if the user uploaded a file or not
         if (governmentId == null || governmentId.isEmpty()) {
             return new ResponseEntity<>(BankResponseDto.builder()
                     .statusCode(BankAccountUtils.FILE_FIELD_EMPTY_CODE)
@@ -155,6 +157,7 @@ public class BankAccountController {
 
 
 
+    //all the methods below will not be exposed to the public
 
     @GetMapping("/account-exists/{accountNumber}")
     public boolean findAccountExists(@PathVariable(value = "accountNumber") String accountNumber){

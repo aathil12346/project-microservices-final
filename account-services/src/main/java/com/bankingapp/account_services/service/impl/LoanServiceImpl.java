@@ -28,6 +28,13 @@ public class LoanServiceImpl implements LoanService {
     private S3FileUploadServiceImpl fileUploadService;
     @Autowired
     private LoanRepository loanRepository;
+
+    /**
+     * method which allows a user to apply for an unsecured loan
+     * @param request Http request
+     * @param requestDto loan request details
+     * @return Bank response
+     */
     @Override
     public BankResponseDto applyForUnSecuredLoan(HttpServletRequest request, LoanRequestDto requestDto) {
 
@@ -51,6 +58,13 @@ public class LoanServiceImpl implements LoanService {
                 .statusCode(BankAccountUtils.LOAN_REQUEST_SUCCESS_CODE).build();
     }
 
+    /**
+     * method which allows the user to apply for a secured loan
+     * @param request Http request
+     * @param requestDto loan request details
+     * @param file Collateral document
+     * @return bank response
+     */
     @Override
     public BankResponseDto applyForSecuredLoan(HttpServletRequest request, LoanRequestDto requestDto, MultipartFile file) {
 
@@ -82,6 +96,11 @@ public class LoanServiceImpl implements LoanService {
                 .statusCode(BankAccountUtils.LOAN_REQUEST_SUCCESS_CODE).build();
     }
 
+    /**
+     * method which allows the user to retrieve all their loan application details
+     * @param request Http request
+     * @return list of loans
+     */
     @Override
     public List<LoanDetailsDto> getLoanDetails(HttpServletRequest request) {
 
@@ -97,6 +116,11 @@ public class LoanServiceImpl implements LoanService {
 
     }
 
+    /**
+     * method which converts a loan entity to loan dto class
+     * @param loan loan entity
+     * @return loan dto
+     */
     private LoanDetailsDto convertLoantoLoanDetailsDto(Loan loan){
 
         return  LoanDetailsDto.builder()
@@ -110,6 +134,12 @@ public class LoanServiceImpl implements LoanService {
                 .build();
 
     }
+
+    /**
+     * method which allows the user to cancel a loan application
+     * @param loanId loan id
+     * @return bank response
+     */
     @Transactional
     @Override
     public BankResponseDto cancelLoan(Long loanId) {

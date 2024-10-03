@@ -53,6 +53,12 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Autowired
     private JwtUtils jwtUtils;
 
+    /**
+     * method which allows the user to open a new bank account
+     * @param requestDto user request details
+     * @param file government id of the user for KYC
+     * @return a bank response
+     */
     @Override
     public BankResponseDto createBankAccount(CreateBankAccountRequestDto requestDto
     , MultipartFile file) {
@@ -113,6 +119,10 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     }
 
+    /**
+     * Method which sends a verification token to a user email
+     * @param user the recipient user
+     */
     private void sendVerificationToken(User user){
 
         String token = UUID.randomUUID().toString();
@@ -133,6 +143,11 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     }
 
+    /**
+     * method which verifies the token send via email
+     * @param token token presented by the user
+     * @return String which indicates whether the token is valid or not
+     */
     @Override
     public String verifyToken(String token) {
 
@@ -157,6 +172,11 @@ public class BankAccountServiceImpl implements BankAccountService {
         return "Your Email is now Verified";
     }
 
+    /**
+     * method to allow a user to login using username and password
+     * @param loginInformationDto contains username and password information of the user
+     * @return a valid JWT
+     */
     @Override
     public String login(LoginInformationDto loginInformationDto) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -169,6 +189,11 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     }
 
+    /**
+     * method which allows a user to view their user details
+     * @param request HTTP request
+     * @return user details
+     */
     @Override
     public UserInfoDto getUserDetails(HttpServletRequest request) {
 
@@ -185,18 +210,26 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     }
 
+    /**
+     * method which allows the user to retrieve all their bank account details
+     * @param request HTTP request
+     * @return List of bank accounts associated with the user
+     */
     @Override
     public List<BankAccountInfoDto> getAccountDetails(HttpServletRequest request) {
 
         User user = getUser(request);
-
-
-
         return user.getBankAccounts().stream().map(this::entityToDto).toList();
 
 
     }
 
+    /**
+     * method which allows the already registered user to open additional bank accounts
+     * @param request HTTP request
+     * @param accountType String account type (SAVINGS or CHECKING)
+     * @return Bank response
+     */
     @Override
     public BankResponseDto addBankAccount(HttpServletRequest request, String accountType) {
         User user = getUser(request);
@@ -229,6 +262,12 @@ public class BankAccountServiceImpl implements BankAccountService {
 
 
     }
+
+    /**
+     * method which extracts the username from the JWT in the request header
+     * @param request HTTP request
+     * @return user entity is returned
+     */
     private User getUser(HttpServletRequest request) {
         String token = jwtUtils.extractJwtFromRequest(request);
 
@@ -237,6 +276,13 @@ public class BankAccountServiceImpl implements BankAccountService {
         return userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
+    /**
+     * method which allows the user to change their current address
+     * @param requestDto request details containing new address information
+     * @param governmentId valid governmentId as address proof
+     * @param request Http request
+     * @return bank response
+     */
     @Override
     public BankResponseDto changeAddress(AddressChangeRequestDto requestDto, MultipartFile governmentId, HttpServletRequest request) {
 
@@ -262,11 +308,21 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     }
 
+    /**
+     * method which checks if a bank account exists or not
+     * @param accountNumber bank account number
+     * @return boolean indiating whether a bank account exists or not
+     */
     @Override
     public boolean doesAccountExists(String accountNumber) {
         return bankAccountRepository.existsBankAccountsByAccountNumber(accountNumber);
     }
 
+    /**
+     * method which debits money from an account
+     * @param requestDto debit request details
+     * @return Http status
+     */
     @Override
     public HttpStatus debitFromAnAccount(AmountTransferRequestDto requestDto) {
         BankAccount senderAccount = bankAccountRepository.findBankAccountByAccountNumber(requestDto.getSenderAccountNumber());
@@ -285,6 +341,11 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     }
 
+    /**
+     * method which credits money to a bank account
+     * @param requestDto credit request details
+     * @return Http status
+     */
     @Override
     public HttpStatus creditToAnAccount(AmountTransferRequestDto requestDto) {
         BankAccount recipientAccount = bankAccountRepository.findBankAccountByAccountNumber(requestDto.getRecipientAccountNumber());
@@ -302,6 +363,11 @@ public class BankAccountServiceImpl implements BankAccountService {
         return HttpStatus.OK;
     }
 
+    /**
+     * method which returns a user details hiding sensitive information
+     * @param email user email
+     * @return user details
+     */
     @Override
     public UserSecurityInfo getUser(String email) {
         Optional<User> user = userRepository.findByEmail(email);
@@ -315,6 +381,11 @@ public class BankAccountServiceImpl implements BankAccountService {
         return info;
     }
 
+    /**
+     * method which converts a bank account entity to its dto class
+     * @param account bank account entity
+     * @return bank account dto
+     */
     private BankAccountInfoDto entityToDto(BankAccount account){
 
         return BankAccountInfoDto.builder()

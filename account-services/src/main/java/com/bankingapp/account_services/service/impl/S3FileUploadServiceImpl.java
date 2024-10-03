@@ -24,7 +24,13 @@ public class S3FileUploadServiceImpl implements S3FileUploadService {
     @Value("${app.s3.bucket}")
     private String bucketName;
 
-
+    /**
+     * method which uploads a file to a remote AWS S3 bucket
+     * @param file file
+     * @param email user email
+     * @return String
+     * @throws IOException
+     */
     @Override
     public String uploadFile(MultipartFile file,String email) throws IOException {
         File fileObj = convertMultiPartFileToFile(file);
@@ -35,8 +41,12 @@ public class S3FileUploadServiceImpl implements S3FileUploadService {
     }
 
 
-
-
+    /**
+     * method which converts a multipart file to a file object
+     * @param file multipart file
+     * @return converted file object
+     * @throws IOException
+     */
     private File convertMultiPartFileToFile(MultipartFile file) throws IOException {
         File convertedFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
         FileOutputStream fos = new FileOutputStream(convertedFile);

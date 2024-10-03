@@ -19,7 +19,14 @@ import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
-
+    /**
+     * method which handles all input field validation errors
+     * @param ex exception
+     * @param headers Http headers
+     * @param status Http status
+     * @param request Web request
+     * @return list of errors
+     */
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers,

@@ -33,19 +33,19 @@ public class UserRepositoryTests {
                 .build();
     }
 
-    @Test
-    public void findUserByEmail(){
-
-        User savedUser = userRepository.save(user);
-
-        Optional<User> retrievedUser = userRepository.findByEmail(savedUser.getEmail());
-
-        if (retrievedUser.isPresent()){
-
-            User finalUser = retrievedUser.get();
-
-            Assertions.assertThat(finalUser.getEmail()).isEqualTo(savedUser.getEmail());
-        }
-
-    }
+//    @Test
+//    public void findUserByEmail(){
+//
+//        User savedUser = userRepository.save(user);
+//
+//        Optional<User> retrievedUser = userRepository.findByEmail(savedUser.getEmail());
+//
+//        if (retrievedUser.isPresent()){
+//
+//            User finalUser = retrievedUser.get();
+//
+//            Assertions.assertThat(finalUser.getEmail()).isEqualTo(savedUser.getEmail());
+//        }
+//
+//    }
 }

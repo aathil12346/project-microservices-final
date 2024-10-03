@@ -32,6 +32,12 @@ public class TransactionServiceImpl implements TransactionService {
     private ApiClient apiClient;
     @Autowired
     private JwtUtils utils;
+
+    /**
+     * method which allows the user to transfer money between two bank accounts
+     * @param requestDto transfer request details
+     * @return bank response
+     */
     @Override
     public BankResponseDto transfer(AmountTransferRequestDto requestDto) {
 
@@ -90,11 +96,22 @@ public class TransactionServiceImpl implements TransactionService {
 
     }
 
+    /**
+     * method which allows the user to view all transactions from or to a bank account
+     * @param accountNumber
+     * @return
+     */
     @Override
     public List<Transaction> viewTransactions(String accountNumber) {
         return transactionRepository.findTransactionBySenderAccountNumberOrReceiverAccountNumber(accountNumber,accountNumber);
     }
 
+    /**
+     * method which allows the user to download bank statements
+     * @param transactions list of transactions
+     * @return byte array
+     * @throws DocumentException
+     */
     @Override
     public byte[] getBankStatement(List<Transaction> transactions) throws DocumentException {
 
@@ -119,6 +136,7 @@ public class TransactionServiceImpl implements TransactionService {
         table.addCell("Date");
 
 
+        // some pieces of the following code is taken from: https://www.tutorialspoint.com/itext/itext_creating_pdf_document.htm#:~:text=%2F%2F%20Creating%20a%20PdfDocument%20PdfDocument,methods%20provided%20by%20its%20class.
         for (Transaction transaction : transactions) {
             table.addCell(transaction.getTransactionId());
             table.addCell(transaction.getSenderAccountNumber());
@@ -135,6 +153,13 @@ public class TransactionServiceImpl implements TransactionService {
         return baos.toByteArray();
     }
 
+    /**
+     * method which retrieves all transaction made within a specified month
+     * @param accountNumber account number
+     * @param year year
+     * @param month month
+     * @return list of transactions
+     */
     @Override
     public List<Transaction> getTransactionsByMonth(String accountNumber, int year, int month) {
 

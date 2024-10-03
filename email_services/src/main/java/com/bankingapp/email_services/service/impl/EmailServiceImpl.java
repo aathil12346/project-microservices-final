@@ -21,6 +21,11 @@ public class EmailServiceImpl implements EmailService {
 
     @Value("${spring.mail.username}")
     private String senderEmail;
+
+    /**
+     * method used to send emails to a recipient email address
+     * @param requestDto email request details
+     */
     @Override
     public void sendEmail(EmailRequestDto requestDto) {
 
